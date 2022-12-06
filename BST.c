@@ -2,6 +2,7 @@
 #include <stdlib.h>
 //Insertion and deletion in Binary Search Tree
 struct Node
+  //membuat structure node yang berisi node kiri, data dan node kanan
 {
 	struct Node* left;
 	int data;
@@ -9,6 +10,7 @@ struct Node
 };
 
 struct Queue
+//membuat strucutre antrian yang menghubungkan antar node
 {
 	struct Node* data;
 	struct Queue* next;
@@ -18,6 +20,7 @@ struct Queue* front = NULL;
 struct Queue* rear = NULL;
 
 int isEmpty()
+//sebuah fungsi yang mengindikasikan apakah antrian kosong atau sudah terisi 
 {
 	if(front==NULL)
 		return 1;
@@ -26,6 +29,7 @@ int isEmpty()
 }
 
 void Pop()
+//fungsi yang digunakan untuk mengeluarkan data
 {
 	if(isEmpty())
 		return;
@@ -38,6 +42,7 @@ void Pop()
 }
 
 struct Node* Pfront()
+//mencari node yang terdepan
 {
 	struct Node* temp ;
 	temp = front->data;
@@ -45,6 +50,7 @@ struct Node* Pfront()
 }
 
 void Enqeue(struct Node* data)
+//fungsi untuk menambah data pada antrian yang paling belakang
 {
 	struct Queue* temp;
 	temp = (struct Queue*)malloc(sizeof(struct Queue));
@@ -62,6 +68,7 @@ void Enqeue(struct Node* data)
 }
 
 struct Node* NewNode(int data)
+//berfungsi untuk menambahkan node baru pada data yang bergua nani pada fungsi insert
 {
 	struct Node* temp = (struct Node*)malloc(sizeof(struct Node));
 	temp->left = NULL;
@@ -72,6 +79,7 @@ struct Node* NewNode(int data)
 }
 
 void PostOrder(struct Node* root)
+//output post order traversal BST
 {
 	if(root==NULL)
 		return;
@@ -82,6 +90,7 @@ void PostOrder(struct Node* root)
 }
 
 struct Node* FindMin(struct Node* root)
+//mencari angka minimal pada node 
 {
 	while(root->left!=NULL)
 		root = root->left;
@@ -90,6 +99,7 @@ struct Node* FindMin(struct Node* root)
 }
 
 void LevelOrder(struct Node* root)
+//output lever order traversal pada BST
 {
 	if(root==NULL)
 		return;
@@ -110,6 +120,7 @@ void LevelOrder(struct Node* root)
 }
 
 struct Node* Delete(struct Node* root,int data)
+//fungsi untuk menghapus data yang telah di tulis ke dalam node 
 {
 	if(root==NULL)
 		return root;
@@ -153,6 +164,7 @@ struct Node* Delete(struct Node* root,int data)
 }
 
 void InOrder(struct Node* root)
+//output in order traversal pada BST
 {
 	if(root==NULL)
 		return;
@@ -163,6 +175,7 @@ void InOrder(struct Node* root)
 }
 
 void PreOrder(struct Node* root)
+//output pre order traversal pada BST
 {
 	if(root==NULL)
 		return;
@@ -173,6 +186,7 @@ void PreOrder(struct Node* root)
 }
 
 struct Node* insert(struct Node* root,int data)
+//menginput data kedalam node
 {
 	if(root==NULL)
 		root =  NewNode(data);
@@ -187,8 +201,8 @@ struct Node* insert(struct Node* root,int data)
 }
 
 void traverse(struct Node* root)
+//semua outputan yang ada pada BST yang akan di inisialisasi
 {
-	//Inisiasi Node kedalam BST
 	printf("\n\nPreOrder traversal : "); PreOrder(root);
 	printf("\nInorder traversal  :   "); InOrder(root);
 	printf("\nPostOrder traversal:   "); PostOrder(root);
