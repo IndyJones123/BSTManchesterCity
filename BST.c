@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include<conio.h>
 //Insertion and deletion in Binary Search Tree
 struct Node
   //membuat structure node yang berisi node kiri, data dan node kanan
@@ -7,6 +8,7 @@ struct Node
 	struct Node* left;
 	int data;
 	struct Node* right;
+	int height;
 };
 
 struct Queue
@@ -209,17 +211,250 @@ void traverse(struct Node* root)
 	printf("\n  | Level Order Traversal\t|\t"); LevelOrder(root); printf("|");
 }
 
-int main()
+//AVL
+
+//Insertion and deletion in AVL Tree
+struct Node* NewNodeS(int data)
+{
+	struct Node* temp = (struct Node*)malloc(sizeof(struct Node));
+	temp->data = data;
+	temp->left = NULL;
+	temp->right = NULL;
+	temp->height = 1;
+	return temp;
+}
+
+int max(int a,int b)
+{
+ 	return (a>b)?a:b;
+}
+
+int height(struct Node* node)
+{
+	if(node==NULL)
+		return 0;
+
+ 	return node->height;
+}
+
+int Balance(struct Node* node)
+{
+	if(node==NULL)
+		return 0;
+
+ 	return height(node->left) - height(node->right);
+}
+
+struct Node* LeftRotate(struct Node* z)
+{
+	struct Node* y = z->right;
+	struct Node* t2 = y->left;
+
+	y->left = z;
+	z->right = t2;
+
+	z->height = max(height(z->left),height(z->right))+1;
+	y->height = max(height(y->left),height(y->right))+1;
+
+	return y;
+}
+
+struct Node* RightRotate(struct Node* z)
+{
+	struct Node* y = z->left;
+	struct Node* t3 = y->right;
+
+	y->right = z;
+	z->left = t3;
+
+	z->height = max(height(z->left),height(z->right))+1;
+	y->height = max(height(y->left),height(y->right))+1;
+
+	return y;
+}
+
+void preorder(struct Node* root)
+{
+	if(root==NULL)
+		return;
+
+	printf("%d ",root->data);
+	preorder(root->left);
+	preorder(root->right);
+}
+
+struct Node* FindMinS(struct Node* node)
+{
+	while(node->left!=NULL)
+		node = node->left;
+
+	return node;
+}
+
+struct Node* DeleteS(struct Node* root,int data)
+{
+	if(root==NULL)
+		return root;
+
+	if(data < root->data)
+		root->left = DeleteS(root->left,data);
+
+	else if(data > root->data)
+		root->right = DeleteS(root->right,data);
+
+	else
+	{
+		if(root->right==NULL && root->left==NULL)
+		{
+			free(root);
+			root = NULL;
+		}
+
+		else if(root->left!=NULL && root->right==NULL)
+		{
+			struct Node* temp = root->left;
+			root = root->left;
+			free(temp);
+		}
+
+		else if(root->right!=NULL && root->left==NULL)
+		{
+			struct Node* temp = root->right;
+			root = root->right;
+			free(temp);
+		}
+
+		else
+		{
+			struct Node* temp = FindMin(root->right);
+			root->data = temp->data;
+			root->right = DeleteS(root->right,temp->data);
+		}
+	}
+	if(root==NULL)
+		return root;
+
+	root->height = 1 + max(height(root->left),height(root->right));
+
+	int balance = Balance(root);
+
+	//Left Left Case
+	if(balance > 1 && Balance(root->left) >=0)
+		return RightRotate(root);
+
+	// Right Right Case
+	if(balance < -1 && Balance(root->right) <=0)
+		return LeftRotate(root);
+
+	// Left Right Case
+	if(balance > 1 && Balance(root->left) < 0)
+	{
+		root->left = LeftRotate(root->left);
+		return RightRotate(root);
+	}
+	
+	//Right Left Case
+	if(balance < -1 && Balance(root->right) > 0)
+	{
+		root->right = RightRotate(root->right);
+		return LeftRotate(root);
+	}
+	return root;
+}
+
+struct Node* Insert(struct Node* root,int data)
+{
+	if(root==NULL)
+		return NewNodeS(data);
+
+	if(data < root->data)
+		root->left = Insert(root->left,data);
+
+	else if(data > root->data)
+		root->right = Insert(root->right,data);
+
+	else
+		return root;
+
+	root->height = max(height(root->left),height(root->right))+1;
+
+	int balance = Balance(root);
+
+	// Left Left Case
+	if(balance > 1 && data < root->left->data)
+		return RightRotate(root);
+
+	// Right Right Case
+	if(balance < -1 && data > root->right->data)
+		return LeftRotate(root);
+
+	//Left Right Case
+	if(balance > 1 && data > root->left->data)
+	{
+		root->left = LeftRotate(root->left);
+		return RightRotate(root);
+	}
+
+	// Right Left Case
+	if(balance < -1 && data < root->right->data)
+	{
+		root->right = RightRotate(root->right);
+		return LeftRotate(root);
+	}
+
+	return root;
+}
+
+int insertBST(int a)
 {
 	struct Node* root = NULL;
-	//Inisiasi Node kedalam BST
-	root = insert(root,38);
-	root = insert(root,29);
-	root = insert(root,6);
-	root = insert(root,3);
-	root = insert(root,99);
-	root = insert(root,26);
-	root = insert(root,93);
+	root = insert(root,a);
+}
+//int insertAVL()
+//{
+//	struct Node* root = NULL;
+//	int testInteger;
+//	printf("Enter an integer: ");
+//    scanf("%d", &testInteger);
+//	root = Insert(root,testInteger);
+//	
+//}
+//int deleteBST()
+//{
+//	struct Node* root = NULL;
+//	int deleteInteger;
+//	printf("Enter an integer: ");
+//    scanf("%d", &deleteInteger);
+//	root = Insert(root,deleteInteger);
+//}
+//int deleteAVL()
+//{
+//	struct Node* root = NULL;
+//	int deleteInteger;
+//	printf("Enter an integer: ");
+//    scanf("%d", &deleteInteger);
+//	root = Insert(root,deleteInteger);
+//}
+
+
+int main()
+{
+	int testinteger;
+	int choice;
+	struct Node* root = NULL;
+	
+	printf(" ========================================================\n");
+	printf(" ||>>>>>>>>>>>>>>>>  UAS STRUKTUR DATA  <<<<<<<<<<<<<<<||\n");
+	printf(" ========================================================\n");
+	printf(" +------------------------------+-----------------------+\n");
+	printf(" |\t\tNPM\t\t|\tNAMA\t\t|\n");
+	printf(" +------------------------------+-----------------------+\n");
+	printf(" |\tAlfian Dorif Murtadlo\t|\t20081010251\t|\n");
+	printf(" |\tDaffa Tungga Wisesa\t|\t21081010243\t|\n");
+	printf(" |\tMuhamad Rizal Efendi\t|\t21081010035\t|\n");	
+	printf(" +------------------------------+-----------------------+\n\n");
+	printf(" ========================================================\n");
+
 	printf("  +========================================================+\n");
 	printf("  |>>>>>>>>>>>> DATA STANDING MANCHASTER CITY <<<<<<<<<<<<<|\n");
 	printf("  |>>>>>>>>>>>>>>> PREMIER LEAGUE 2021/2022 <<<<<<<<<<<<<<<|\n");
@@ -229,9 +464,72 @@ int main()
 	printf("  +-----------------------+----+---+---+----+----+----+----+\n");
 	printf("  | MANCHASTER CITY       | 38 | 29 | 6 | 3 | 99 | 26 | 93 |\n");
 	printf("  +=============================+==========================+\n");
-	traverse(root);
-	printf("\n  +=============================+==========================+\n");
+	printf(" ========================================================\n");
+	do
+    {
+    printf(" ||>>>>>>>>>>>>>>>  Pilih Operasi  <<<<<<<<<<<<<<||\n");
+    printf(" ========================================================\n");
+    printf("\n 1.Insert Score BST \n 2.Insert Score AVL\n 3.Delete Score BST\n 4.Delete Score AVL\n 5.CLEAR\n 6.DISPLAY\n 7.EXIT\n\n");
+    printf(" --------------------------------------------------------\n");
+    printf(" Masukkan Pilihan : "); scanf("%d",&choice);
+    printf(" ========================================================\n");
+        switch(choice)
+        {
+            case 1:
+            {
+            	printf("Enter an integer: ");
+   				scanf("%d", &testinteger);
+            	insertBST(testinteger);
+                break;
+            }
+		    case 2:
+            {
+//				insertAVL();
+                break;
+            }
+		    case 3:
+            {
 
+                break;
+            }
+            case 4:
+            {
+				
+                break;
+            }
+            case 5:
+            {
+                		
+                break;
+            }
+            case 6:
+            {
+            	root = insert(root,38);
+				root = insert(root,29);
+				root = insert(root,6);
+				root = insert(root,3);
+				root = insert(root,99);
+				root = insert(root,26);
+				root = insert(root,93);
+                traverse(root);
+                getch();system("cls");
+                break;
+            }
+            case 7:
+            {
+                
+                break;
+            }
+            default:
+            {
+                printf ("\n Masukkan Pilihan Yang Valid Bu(1/2/3/4/5/6)");
+                getch(); system("cls");
+            }
+                 
+        }
+	}
+    while(choice!=7);
 
-	return 0;
+    return 0;
+	
 }
