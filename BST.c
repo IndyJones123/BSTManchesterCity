@@ -203,10 +203,10 @@ struct Node* insert(struct Node* root,int data)
 void traverse(struct Node* root)
 //semua outputan yang ada pada BST yang akan di inisialisasi
 {
-	printf("\n\nPreOrder traversal : "); PreOrder(root);
-	printf("\nInorder traversal  :   "); InOrder(root);
-	printf("\nPostOrder traversal:   "); PostOrder(root);
-	printf("\n Level Order Traversal: ");LevelOrder(root);
+	printf("  | PreOrder traversal\t\t|\t"); PreOrder(root); printf("|");
+	printf("\n  | Inorder traversal\t\t|\t"); InOrder(root); printf("|");
+	printf("\n  | PostOrder traversal\t\t|\t"); PostOrder(root); printf("|");
+	printf("\n  | Level Order Traversal\t|\t"); LevelOrder(root); printf("|");
 }
 
 int main()
@@ -219,10 +219,18 @@ int main()
 	root = insert(root,3);
 	root = insert(root,99);
 	root = insert(root,26);
-	root = insert(root,73);
-	
-
+	root = insert(root,93);
+	printf("  +========================================================+\n");
+	printf("  |>>>>>>>>>>>> DATA STANDING MANCHASTER CITY <<<<<<<<<<<<<|\n");
+	printf("  |>>>>>>>>>>>>>>> PREMIER LEAGUE 2021/2022 <<<<<<<<<<<<<<<|\n");
+	printf("  +========================================================+\n");
+	printf("  +--------------------------------------------------------+\n");
+	printf("  |         CLUB          | P  |  W | D | L | GF | GA | Pts|\n");
+	printf("  +-----------------------+----+---+---+----+----+----+----+\n");
+	printf("  | MANCHASTER CITY       | 38 | 29 | 6 | 3 | 99 | 26 | 93 |\n");
+	printf("  +=============================+==========================+\n");
 	traverse(root);
+	printf("\n  +=============================+==========================+\n");
 
 
 	return 0;
